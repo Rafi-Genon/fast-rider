@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -8,13 +8,9 @@ const Login = () => {
     if (firebase.apps.length === 0) {
         firebase.initializeApp(firebaseConfig);
     }
-    // ***************************************************
-    // ***************************************************
     const [loggedInUser, setLoggedInUser] = useContext(fullContext)
     var googleProvider = new firebase.auth.GoogleAuthProvider();
 
-    // ******************************************************
-    // *******************************************************
     const handleGoogelSignIn = () => {
         firebase.auth()
             .signInWithPopup(googleProvider)
@@ -23,15 +19,14 @@ const Login = () => {
                 const googleSignIn = {
                     name: displayName,
                     email: email,
-                    photo: photoURL
+                    photo: photoURL,
                 }
                 console.log(result.user);
                 setLoggedInUser(googleSignIn)
             }).catch((error) => {
             });
     }
-    // *******************************************************
-    // *******************************************************
+
     const handleBlur = (e) => {
         let isFeildValid = true;
         if (e.target.name === 'email') {
@@ -46,56 +41,43 @@ const Login = () => {
             const newUserInfo = { ...loggedInUser }
             newUserInfo[e.target.name] = e.target.value
             setLoggedInUser(newUserInfo);
-            // console.log(newUserInfo);
         }
     }
-
-    // ***************************************************************
-    const validation = () => {
-        if (loggedInUser.confirmPassword !== loggedInUser.password) {
-            console.log('mc worg likhsos');
-        }
-        else {
-            console.log('yu wite');
-        }
-    }
-    // ****************************************
     const handleSubmit = (e) => {
         if (loggedInUser.confirmPassword !== loggedInUser.password) {
-            console.log('mc worg likhsos');
-            // const warning = <p>you are write wrong</p>
+            const newUserInfo = { ...loggedInUser }
+            newUserInfo.worngPassError = true;
+            setLoggedInUser(newUserInfo)
         }
         if (loggedInUser.name && loggedInUser.password && loggedInUser.email && loggedInUser.confirmPassword === loggedInUser.password) {
-            // console.log('correct info');
             firebase.auth().createUserWithEmailAndPassword(loggedInUser.email, loggedInUser.password)
                 .then((userCredential) => {
-                    // Signed in 
                     var user = userCredential.user;
+                    const newUserInfo = { ...loggedInUser }
+                    newUserInfo.error = ''
+                    newUserInfo.success = true;
+                    newUserInfo.worngPassError = false;
+                    setLoggedInUser(newUserInfo)
                     console.log(user);
-                    // ...
                 })
                 .catch((error) => {
-                    var errorCode = error.code;
                     var errorMessage = error.message;
+                    const newUserInfo = { ...loggedInUser }
+                    newUserInfo.error = errorMessage
+                    newUserInfo.success = false;
+                    setLoggedInUser(newUserInfo)
                     console.log(errorMessage);
-                    // ..
                 });
         }
-        // else{
-        //     console.log('wrong info');
-        // }
         e.preventDefault();
-
     }
-
-    // const [confirmPassword, setconfirmPassword] = useState('')
-    // const [password, setpassword] = useState('')
+    console.log(loggedInUser);
     return (
         <div>
             <button onClick={handleGoogelSignIn}>g log in</button>
             <h2>email pass log in</h2>
             <form onSubmit={handleSubmit} >
-                <input type="text" onBlur={handleBlur} name="name" placeholder='Your name' />
+                <input type="text" onBlur={handleBlur} name="name" placeholder='Your name' required/>
                 <br />
                 <input type="text" onBlur={handleBlur} name="email" placeholder="your email" required />
                 <br />
@@ -104,7 +86,13 @@ const Login = () => {
                 <input type="password" onBlur={handleBlur} placeholder="your confirm password" name="confirmPassword" required />
                 <br />
                 {
-
+                    loggedInUser.worngPassError && <p>pass not match</p>
+                }
+                {
+                    <p>{loggedInUser.error}</p>
+                }
+                {
+                    loggedInUser.success && <p>success fullyt</p>
                 }
                 <input type="submit" value="Sign up" />
             </form>

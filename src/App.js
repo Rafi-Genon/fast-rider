@@ -5,7 +5,14 @@ import Login from './Components/Login/Login';
 export const fullContext = createContext()
 
 function App() {
-  const [loggedInUser, setLoggedInUser] = useState({})
+  const [loggedInUser, setLoggedInUser] = useState({
+    name: '',
+    email: '',
+    photo: '',
+    error:'',
+    success:false,
+    worngPassError: false
+  })
   return (
     <fullContext.Provider value={[loggedInUser, setLoggedInUser]} >
       <div  style={{textAlign:'center'}}>
