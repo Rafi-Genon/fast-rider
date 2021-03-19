@@ -1,14 +1,21 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from '../../firebase.config';
-import { fullContext } from '../../App'
-const Login = () => {
+// import { fullContext } from '../../App'
+const CreateAccount = () => {
     if (firebase.apps.length === 0) {
         firebase.initializeApp(firebaseConfig);
     }
-    const [loggedUser, setloggedUser] = useContext(fullContext)
+    const [newAccount, setNewAccount] = useState({
+        name: '',
+        email: '',
+        photo: '',
+        error: '',
+        success: false,
+        worngPassError: false
+    })
     var googleProvider = new firebase.auth.GoogleAuthProvider();
 
     const handleGoogelSignIn = () => {
@@ -23,7 +30,7 @@ const Login = () => {
                     success: true
                 }
                 console.log(result.user);
-                setloggedUser(googleSignIn)
+                setNewAccount(googleSignIn)
             }).catch((error) => {
             });
     }
@@ -39,72 +46,80 @@ const Login = () => {
             isFeildValid = isPasswordValid && passwordContainNumber
         }
         if (isFeildValid) {
-            const newUserInfo = { ...loggedUser }
+            const newUserInfo = { ...newAccount }
             newUserInfo[e.target.name] = e.target.value
-            setloggedUser(newUserInfo);
+            setNewAccount(newUserInfo);
         }
     }
     const handleSubmit = (e) => {
-        if (loggedUser.password && loggedUser.email) {
-            // firebase.auth().createUserWithEmailAndPassword(loggedUser.email, loggedUser.password)
-            //     .then((userCredential) => {
-            //         var user = userCredential.user;
-            //         const newUserInfo = { ...loggedUser }
-            //         newUserInfo.error = ''
-            //         newUserInfo.success = true;
-            //         newUserInfo.worngPassError = false;
-            //         setloggedUser(newUserInfo)
-            //         console.log(user);
-            //     })
-            //     .catch((error) => {
-            //         var errorMessage = error.message;
-            //         const newUserInfo = { ...loggedUser }
-            //         newUserInfo.error = errorMessage
-            //         newUserInfo.success = false;
-            //         setloggedUser(newUserInfo)
-            //         console.log(errorMessage);
-            //     });
-            firebase.auth().signInWithEmailAndPassword(loggedUser.email, loggedUser.password)
+        if (newAccount.confirmPassword !== newAccount.password) {
+            const newUserInfo = { ...newAccount }
+            newUserInfo.worngPassError = true;
+            setNewAccount(newUserInfo)
+        }
+        if (newAccount.name && newAccount.password && newAccount.email && newAccount.confirmPassword === newAccount.password) {
+            firebase.auth().createUserWithEmailAndPassword(newAccount.email, newAccount.password)
                 .then((userCredential) => {
                     var user = userCredential.user;
-                    const newUserInfo = { ...loggedUser }
+                    const newUserInfo = { ...newAccount }
                     newUserInfo.error = ''
                     newUserInfo.success = true;
-                    setloggedUser(newUserInfo)
+                    newUserInfo.worngPassError = false;
+                    setNewAccount(newUserInfo)
+                    updateUserName(newAccount.name)
                     console.log(user);
                 })
                 .catch((error) => {
                     var errorMessage = error.message;
-                    const newUserInfo = { ...loggedUser }
+                    const newUserInfo = { ...newAccount }
                     newUserInfo.error = errorMessage
                     newUserInfo.success = false;
-                    setloggedUser(newUserInfo)
+                    setNewAccount(newUserInfo)
                     console.log(errorMessage);
                 });
         }
         e.preventDefault();
     }
-    console.log(loggedUser);
+    const updateUserName = (name) => {
+        var user = firebase.auth().currentUser;
+
+        user.updateProfile({
+            displayName: name,
+            photoURL: "https://example.com/jane-q-user/profile.jpg"
+        }).then(function () {
+            // Update successful.
+        }).catch(function (error) {
+            // An error happened.
+        });
+    }
+    console.log(newAccount);
     return (
         <div>
-            <button onClick={handleGoogelSignIn}>Google Sign in</button>
-            <h2 style={{ color: 'red' }}>email pass log in</h2>
+            <button onClick={handleGoogelSignIn}>g log in</button>
+            <h2>email pass create account</h2>
             <form onSubmit={handleSubmit} >
+                <input type="text" onBlur={handleBlur} name="name" placeholder='Your name' required />
+                <br />
                 <input type="text" onBlur={handleBlur} name="email" placeholder="your email" required />
                 <br />
                 <input type="password" onBlur={handleBlur} placeholder="your password" name="password" required />
                 <br />
+                <input type="password" onBlur={handleBlur} placeholder="your confirm password" name="confirmPassword" required />
+                <br />
                 {
-                    <p>{loggedUser.error}</p>
+                    newAccount.worngPassError && <p>pass not match</p>
                 }
                 {
-                    loggedUser.success && <p>Log in successful</p>
+                    <p>{newAccount.error}</p>
                 }
-                <input type="submit" value="Sign in" />
+                {
+                    newAccount.success && <p>Account created successfully go to log in page</p>
+                }
+                <input type="submit" value="Sign up" />
             </form>
-            <p>Don't have account go to <Link to="/create-account">Create account</Link> </p>
+            <p>alredy have account go to <Link to="/log-in">Log in</Link> </p>
         </div>
     );
 };
 
-export default Login;
+export default CreateAccount;
