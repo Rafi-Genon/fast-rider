@@ -8,10 +8,15 @@ function App() {
   const [loggedInUser, setLoggedInUser] = useState({})
   return (
     <fullContext.Provider value={[loggedInUser, setLoggedInUser]} >
-      <h1 style={{color:'red'}}>I am the best developer. I do everythig however it difficult</h1>
-      <p>name: {loggedInUser.displayName}</p>
-      <img src={loggedInUser.photoURL} alt="" />
-      <Login></Login>
+      <div  style={{textAlign:'center'}}>
+        <h1 style={{ color: 'red' }}>I am the best developer. I do everythig however it difficult</h1>
+        <p>name: {loggedInUser.name}</p>
+        <p>email: {loggedInUser.email}</p>
+        <p>password: {loggedInUser.password}</p>
+        <p>confirm-password: {loggedInUser.confirmPassword}</p>
+        <img src={loggedInUser.photo} alt="" />
+        <Login></Login>
+      </div>
     </fullContext.Provider>
   );
 }
