@@ -5,15 +5,17 @@ import {
   Route
 } from "react-router-dom";
 import './App.css';
+import BookRide from './Components/BookRide/BookRide';
 import CreateAccount from './Components/CreateAccount/CreateAccount'
 import Home from './Components/Home/Home';
 import Login from './Components/Login/Login';
+import PrivateRoute from './Components/PrivateRoute/PrivateRoute';
 
 export const fullContext = createContext()
 
 
 function App() {
-  const [newAccount, setNewAccount] = useState({
+  const [loggedInUser, setLoggedInUser] = useState({
     name: '',
     email: '',
     photo: '',
@@ -21,16 +23,19 @@ function App() {
     success: false
   })
   return (
-    <fullContext.Provider value={[newAccount, setNewAccount]} >
+    <fullContext.Provider value={[loggedInUser, setLoggedInUser]} >
       <Router>
+        <h3>Name: {loggedInUser.name}</h3>
         <Switch>
-
           <Route exact path='/'>
             <Home></Home>
           </Route>
           <Route path='/home'>
             <Home></Home>
           </Route>
+          <PrivateRoute path='/book'>
+            <BookRide></BookRide>
+          </PrivateRoute>
           <Route path='/create-account'>
             <CreateAccount></CreateAccount>
           </Route>

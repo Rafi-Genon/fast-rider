@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from '../../firebase.config';
@@ -8,6 +8,10 @@ const Login = () => {
     if (firebase.apps.length === 0) {
         firebase.initializeApp(firebaseConfig);
     }
+    const history = useHistory()
+    const location = useLocation()
+    let { from } = location.state || { from: { pathname: "/book" } };
+
     const [loggedUser, setloggedUser] = useContext(fullContext)
     var googleProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -24,6 +28,7 @@ const Login = () => {
                 }
                 console.log(result.user);
                 setloggedUser(googleSignIn)
+                history.replace(from);
             }).catch((error) => {
             });
     }
@@ -46,32 +51,18 @@ const Login = () => {
     }
     const handleSubmit = (e) => {
         if (loggedUser.password && loggedUser.email) {
-            // firebase.auth().createUserWithEmailAndPassword(loggedUser.email, loggedUser.password)
-            //     .then((userCredential) => {
-            //         var user = userCredential.user;
-            //         const newUserInfo = { ...loggedUser }
-            //         newUserInfo.error = ''
-            //         newUserInfo.success = true;
-            //         newUserInfo.worngPassError = false;
-            //         setloggedUser(newUserInfo)
-            //         console.log(user);
-            //     })
-            //     .catch((error) => {
-            //         var errorMessage = error.message;
-            //         const newUserInfo = { ...loggedUser }
-            //         newUserInfo.error = errorMessage
-            //         newUserInfo.success = false;
-            //         setloggedUser(newUserInfo)
-            //         console.log(errorMessage);
-            //     });
             firebase.auth().signInWithEmailAndPassword(loggedUser.email, loggedUser.password)
                 .then((userCredential) => {
-                    var user = userCredential.user;
+                    // const user = userCredential.user;
+                    const { displayName, email } = userCredential.user;
                     const newUserInfo = { ...loggedUser }
                     newUserInfo.error = ''
                     newUserInfo.success = true;
+                    newUserInfo.name = displayName;
+                    newUserInfo.email = email
                     setloggedUser(newUserInfo)
-                    console.log(user);
+                    history.replace(from);
+                    // console.log(user);
                 })
                 .catch((error) => {
                     var errorMessage = error.message;
