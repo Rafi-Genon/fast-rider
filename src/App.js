@@ -1,4 +1,5 @@
 import { createContext, useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
   Switch,
@@ -20,12 +21,13 @@ function App() {
     email: '',
     photo: '',
     error: '',
-    success: false
+    success: false,
+    destinationConfirm: false
   })
   return (
     <fullContext.Provider value={[loggedInUser, setLoggedInUser]} >
       <Router>
-        <h3>Name: {loggedInUser.name}</h3>
+        {/* <h3>Name: {loggedInUser.name}</h3> */}
         <Switch>
           <Route exact path='/'>
             <Home></Home>

@@ -2,33 +2,41 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useHistory } from "react-router-dom";
 import { fullContext } from '../../App'
 import RideData from '../../Data/RideData.json'
+import Navbar from '../NavBar/Navbar';
+import './Home.css'
 const Home = () => {
     const history = useHistory()
     const [newAccount, setNewAccount] = useContext(fullContext)
-    const [rideData, setRideData] = useState({})
+    const [rideData, setRideData] = useState([])
     useEffect(() =>
         setRideData(RideData)
         , [])
-    // const .vehicleCard = rideData.vehicleCard
-    console.log(rideData)
-    return (
-        <div style={{ textAlign: 'center' }}>
-            <p><Link to="/book">Book car</Link></p>
-            {/* <h1 style={{ color: 'red' }}>I am the best developer. I do everythig however it difficult</h1>
-            <p>name: {newAccount.name}</p>
-            <p>email: {newAccount.email}</p>
-            <p>password: {newAccount.password}</p>
-            <p>confirm-password: {newAccount.confirmPassword}</p>
-            <img src={newAccount.photo} alt="" /> */}
-            {
-                // rideData.map(vehicle => <img src={vehicle.image} alt="img" onClick={() => history.push(`/book/${vehicle.type}`)}></img>)
-            }
-            {/* <p>{rideData.vehicleCard[1].type}</p> 
-            <img src={rideData.vehicleCard[1].image} alt=""/> */}
-            {/* <img src="../../Data/Images/Bus.png" alt=""/> */}
 
-            <p>alredy have account go to <Link to="/log-in">Log in</Link> </p>
-            <p>Don't have account go to <Link to="/create-account">Create account</Link> </p>
+    const selectedVehicle = (vehicle) => {
+        const newUserInfo = { ...newAccount, vehicle }
+        setNewAccount(newUserInfo)
+        history.push(`/book/${vehicle.type}`)
+    }
+    console.log(newAccount)
+    return (
+        <div className="background">
+            <Navbar></Navbar>
+            <div className="container home-section">
+                <div className="row">
+                    {
+                        rideData.map(vehicle =>
+                            <div className="clo-sm-12 col-md-6 col-lg-3">
+                                <div className="vehicle-card m-3 shadow" >
+                                    <img style={{ width: '100%' }} src={vehicle.image} alt="img" onClick={() => selectedVehicle(vehicle)}></img>
+                                    <p className="m-4" style={{ textAlign: 'center', fontWeight: 'bold' }}>{vehicle.type}</p>
+                                </div>
+                            </div>)
+                    }
+                </div>
+            </div>
+
+            {/* <p>alredy have account go to <Link to="/log-in">Log in</Link> </p>
+            <p>Don't have account go to <Link to="/create-account">Create account</Link> </p> */}
         </div>
     );
 };

@@ -4,13 +4,17 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from '../../firebase.config';
 import { fullContext } from '../../App'
+import Navbar from '../NavBar/Navbar';
+import './Login.css'
+import { faGoogle } from '@fortawesome/free-brands-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const Login = () => {
     if (firebase.apps.length === 0) {
         firebase.initializeApp(firebaseConfig);
     }
     const history = useHistory()
     const location = useLocation()
-    let { from } = location.state || { from: { pathname: "/" } };
+    let { from } = location.state || { from: { pathname: "/home" } };
 
     const [loggedUser, setloggedUser] = useContext(fullContext)
     var googleProvider = new firebase.auth.GoogleAuthProvider();
@@ -20,19 +24,19 @@ const Login = () => {
             .signInWithPopup(googleProvider)
             .then((result) => {
                 const { displayName, email, photoURL } = result.user;
-                const googleSignIn = {
-                    name: displayName,
-                    email: email,
-                    photo: photoURL,
-                    success: true
-                }
-                console.log(result.user);
+
+                const googleSignIn = { ...loggedUser }
+                googleSignIn.name = displayName;
+                googleSignIn.email = email;
+                googleSignIn.photo = photoURL;
+                googleSignIn.success = true
+
                 setloggedUser(googleSignIn)
                 history.replace(from);
             }).catch((error) => {
             });
     }
-
+    console.log(loggedUser);
     const handleBlur = (e) => {
         let isFeildValid = true;
         if (e.target.name === 'email') {
@@ -77,23 +81,32 @@ const Login = () => {
     }
     console.log(loggedUser);
     return (
-        <div>
-            <button onClick={handleGoogelSignIn}>Google Sign in</button>
-            <h2 style={{ color: 'red' }}>email pass log in</h2>
-            <form onSubmit={handleSubmit} >
-                <input type="text" onBlur={handleBlur} name="email" placeholder="your email" required />
-                <br />
-                <input type="password" onBlur={handleBlur} placeholder="your password" name="password" required />
-                <br />
-                {
-                    <p>{loggedUser.error}</p>
-                }
-                {
-                    loggedUser.success && <p>Log in successful</p>
-                }
-                <input type="submit" value="Sign in" />
-            </form>
-            <p>Don't have account go to <Link to="/create-account">Create account</Link> </p>
+        <div className="container">
+            <Navbar></Navbar>
+            <div className="form-design">
+                <h4 style={{ marginBottom: '40px' }}>Login</h4>
+                <form onSubmit={handleSubmit} >
+                    <input className="form-control" type="text" onBlur={handleBlur} name="email" placeholder="your email" required />
+                    <br />
+                    <input className="form-control" type="password" onBlur={handleBlur} placeholder="your password" name="password" required />
+                    <br />
+                    <input type="checkbox" name="remeber-me" id="" />
+                    <label style={{ paddingLeft: '20px' }} htmlFor="checkbox">Remeber Me</label>
+                    {
+                        <p style={{ color: 'red', textAlign: 'center' }}>{loggedUser.error}</p>
+                    }
+                    {
+                        loggedUser.success && <p>Log in successful</p>
+                    }
+                    <input className="btn btn-warning" style={{ width: '100%', fontWeight: '600' }} type="submit" value="Sign in" />
+                    <p className="text-center pt-4">Don’t have an account? <Link to="/create-account">Create an account</Link> </p>
+                </form>
+            </div>
+            <div className="mb-5" style={{ width: '25%', margin: 'auto', marginTop: '2em' }}>
+                <p style={{ textAlign: 'center', width: '100%', margin: 'auto', border: 'blue 1px solid', fontWeight: '600' }} className="btn" onClick={handleGoogelSignIn}><span style={{ paddingRight: '50px' }}><FontAwesomeIcon icon={faGoogle} /></span> Continue with Google</p>
+            </div>
+
+
         </div>
     );
 };

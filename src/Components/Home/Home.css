@@ -1,0 +1,16 @@
+.background{
+    height:600px;
+    background-image: url("../../Images/backGround.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover; 
+}
+.home-section{
+    margin-top: 110px;
+}
+.vehicle-card{
+    background-color: white;
+    border-radius: 0.5em;
+    width: 100%;
+    padding: 20px;
+}

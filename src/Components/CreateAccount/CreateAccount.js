@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from '../../firebase.config';
+import Navbar from '../NavBar/Navbar';
+import './CreateAccount.css'
+import { faGoogle } from '@fortawesome/free-brands-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { fullContext } from '../../App'
 const CreateAccount = () => {
     if (firebase.apps.length === 0) {
@@ -23,13 +27,14 @@ const CreateAccount = () => {
             .signInWithPopup(googleProvider)
             .then((result) => {
                 const { displayName, email, photoURL } = result.user;
-                const googleSignIn = {
-                    name: displayName,
-                    email: email,
-                    photo: photoURL,
-                    success: true
-                }
+
+                const googleSignIn = { ...newAccount }
+                googleSignIn.name = displayName;
+                googleSignIn.email = email;
+                googleSignIn.photo = photoURL;
+                googleSignIn.success = true
                 console.log(result.user);
+
                 setNewAccount(googleSignIn)
             }).catch((error) => {
             });
@@ -94,30 +99,35 @@ const CreateAccount = () => {
     }
     console.log(newAccount);
     return (
-        <div>
-            <button onClick={handleGoogelSignIn}>g log in</button>
-            <h2>email pass create account</h2>
-            <form onSubmit={handleSubmit} >
-                <input type="text" onBlur={handleBlur} name="name" placeholder='Your name' required />
-                <br />
-                <input type="text" onBlur={handleBlur} name="email" placeholder="your email" required />
-                <br />
-                <input type="password" onBlur={handleBlur} placeholder="your password" name="password" required />
-                <br />
-                <input type="password" onBlur={handleBlur} placeholder="your confirm password" name="confirmPassword" required />
-                <br />
-                {
-                    newAccount.worngPassError && <p>pass not match</p>
-                }
-                {
-                    <p>{newAccount.error}</p>
-                }
-                {
-                    newAccount.success && <p>Account created successfully go to log in page</p>
-                }
-                <input type="submit" value="Sign up" />
-            </form>
-            <p>alredy have account go to <Link to="/log-in">Log in</Link> </p>
+        <div className="container">
+            <Navbar></Navbar>
+            <div className="form-design my-5">
+                <h4 style={{ marginBottom: '40px' }}>Create an account</h4>
+                <form onSubmit={handleSubmit} >
+                    <input className="form-control" type="text" onBlur={handleBlur} name="name" placeholder='Your name' required />
+                    <br />
+                    <input className="form-control" type="text" onBlur={handleBlur} name="email" placeholder="your email" required />
+                    <br />
+                    <input className="form-control" type="password" onBlur={handleBlur} placeholder="your password" name="password" required />
+                    <br />
+                    <input className="form-control" type="password" onBlur={handleBlur} placeholder="your confirm password" name="confirmPassword" required />
+                    <br />
+                    {
+                        newAccount.worngPassError && <p style={{ color: 'red', textAlign: 'center' }}>Password not match</p>
+                    }
+                    {
+                        <p style={{ color: 'red', textAlign: 'center' }}>{newAccount.error}</p>
+                    }
+                    {
+                        newAccount.success && <p style={{ color: 'green', textAlign: 'center' }}>Account created successfully go to log in page</p>
+                    }
+                    <input className="btn btn-warning" style={{ width: '100%', fontWeight: '600' }} type="submit" value="SignUp" />
+                    <p className="text-center pt-4">Already have an account? <Link to="/log-in">Log in</Link> </p>
+                </form>
+            </div>
+            <div className="mb-5" style={{ width: '25%', margin: 'auto', marginTop: '2em' }}>
+                <p style={{ textAlign: 'center', width: '100%', margin: 'auto', border: 'blue 1px solid', fontWeight: '600' }} className="btn" onClick={handleGoogelSignIn}><span style={{ paddingRight: '50px' }}><FontAwesomeIcon icon={faGoogle} /></span> Continue with Google</p>
+            </div>
         </div>
     );
 };
