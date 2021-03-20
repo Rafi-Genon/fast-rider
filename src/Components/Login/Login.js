@@ -16,7 +16,7 @@ const Login = () => {
     const location = useLocation()
     let { from } = location.state || { from: { pathname: "/home" } };
 
-    const [loggedUser, setloggedUser] = useContext(fullContext)
+    const [loggedInUser, setLoggedinUser] = useContext(fullContext)
     var googleProvider = new firebase.auth.GoogleAuthProvider();
 
     const handleGoogelSignIn = () => {
@@ -25,18 +25,18 @@ const Login = () => {
             .then((result) => {
                 const { displayName, email, photoURL } = result.user;
 
-                const googleSignIn = { ...loggedUser }
+                const googleSignIn = { ...loggedInUser }
                 googleSignIn.name = displayName;
                 googleSignIn.email = email;
                 googleSignIn.photo = photoURL;
                 googleSignIn.success = true
 
-                setloggedUser(googleSignIn)
+                setLoggedinUser(googleSignIn)
                 history.replace(from);
             }).catch((error) => {
             });
     }
-    console.log(loggedUser);
+    console.log(loggedInUser);
     const handleBlur = (e) => {
         let isFeildValid = true;
         if (e.target.name === 'email') {
@@ -48,55 +48,53 @@ const Login = () => {
             isFeildValid = isPasswordValid && passwordContainNumber
         }
         if (isFeildValid) {
-            const newUserInfo = { ...loggedUser }
+            const newUserInfo = { ...loggedInUser }
             newUserInfo[e.target.name] = e.target.value
-            setloggedUser(newUserInfo);
+            setLoggedinUser(newUserInfo);
         }
     }
     const handleSubmit = (e) => {
-        if (loggedUser.password && loggedUser.email) {
-            firebase.auth().signInWithEmailAndPassword(loggedUser.email, loggedUser.password)
+        if (loggedInUser.password && loggedInUser.email) {
+            firebase.auth().signInWithEmailAndPassword(loggedInUser.email, loggedInUser.password)
                 .then((userCredential) => {
-                    // const user = userCredential.user;
                     const { displayName, email } = userCredential.user;
-                    const newUserInfo = { ...loggedUser }
+                    const newUserInfo = { ...loggedInUser }
                     newUserInfo.error = ''
                     newUserInfo.success = true;
                     newUserInfo.name = displayName;
                     newUserInfo.email = email
-                    setloggedUser(newUserInfo)
+                    setLoggedinUser(newUserInfo)
                     history.replace(from);
-                    // console.log(user);
                 })
                 .catch((error) => {
                     var errorMessage = error.message;
-                    const newUserInfo = { ...loggedUser }
+                    const newUserInfo = { ...loggedInUser }
                     newUserInfo.error = errorMessage
                     newUserInfo.success = false;
-                    setloggedUser(newUserInfo)
+                    setLoggedinUser(newUserInfo)
                     console.log(errorMessage);
                 });
         }
         e.preventDefault();
     }
-    console.log(loggedUser);
+    console.log(loggedInUser);
     return (
         <div className="container">
             <Navbar></Navbar>
             <div className="form-design">
                 <h4 style={{ marginBottom: '40px' }}>Login</h4>
                 <form onSubmit={handleSubmit} >
-                    <input className="form-control" type="text" onBlur={handleBlur} name="email" placeholder="your email" required />
+                    <input className="form-control" type="text" onBlur={handleBlur} name="email" placeholder="Your email" required />
                     <br />
-                    <input className="form-control" type="password" onBlur={handleBlur} placeholder="your password" name="password" required />
+                    <input className="form-control" type="password" onBlur={handleBlur} placeholder="Your password" name="password" required />
                     <br />
                     <input type="checkbox" name="remeber-me" id="" />
                     <label style={{ paddingLeft: '20px' }} htmlFor="checkbox">Remeber Me</label>
                     {
-                        <p style={{ color: 'red', textAlign: 'center' }}>{loggedUser.error}</p>
+                        <p style={{ color: 'red', textAlign: 'center' }}>{loggedInUser.error}</p>
                     }
                     {
-                        loggedUser.success && <p>Log in successful</p>
+                        loggedInUser.success && <p>Log in successful</p>
                     }
                     <input className="btn btn-warning" style={{ width: '100%', fontWeight: '600' }} type="submit" value="Sign in" />
                     <p className="text-center pt-4">Don’t have an account? <Link to="/create-account">Create an account</Link> </p>

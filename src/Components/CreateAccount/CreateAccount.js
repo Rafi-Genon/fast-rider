@@ -7,7 +7,7 @@ import Navbar from '../NavBar/Navbar';
 import './CreateAccount.css'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { fullContext } from '../../App'
+
 const CreateAccount = () => {
     if (firebase.apps.length === 0) {
         firebase.initializeApp(firebaseConfig);
@@ -106,11 +106,11 @@ const CreateAccount = () => {
                 <form onSubmit={handleSubmit} >
                     <input className="form-control" type="text" onBlur={handleBlur} name="name" placeholder='Your name' required />
                     <br />
-                    <input className="form-control" type="text" onBlur={handleBlur} name="email" placeholder="your email" required />
+                    <input className="form-control" type="text" onBlur={handleBlur} name="email" placeholder="Your email" required />
                     <br />
-                    <input className="form-control" type="password" onBlur={handleBlur} placeholder="your password" name="password" required />
+                    <input className="form-control" type="password" onBlur={handleBlur} placeholder="Password (Use at least 7 word with a number)" name="password" required />
                     <br />
-                    <input className="form-control" type="password" onBlur={handleBlur} placeholder="your confirm password" name="confirmPassword" required />
+                    <input className="form-control" type="password" onBlur={handleBlur} placeholder="Confirm password" name="confirmPassword" required />
                     <br />
                     {
                         newAccount.worngPassError && <p style={{ color: 'red', textAlign: 'center' }}>Password not match</p>

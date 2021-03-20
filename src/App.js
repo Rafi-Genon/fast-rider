@@ -11,6 +11,7 @@ import CreateAccount from './Components/CreateAccount/CreateAccount'
 import Home from './Components/Home/Home';
 import Login from './Components/Login/Login';
 import PrivateRoute from './Components/PrivateRoute/PrivateRoute';
+import NotMatch from './Components/NotMatch/NotMatch';
 
 export const fullContext = createContext()
 
@@ -27,7 +28,6 @@ function App() {
   return (
     <fullContext.Provider value={[loggedInUser, setLoggedInUser]} >
       <Router>
-        {/* <h3>Name: {loggedInUser.name}</h3> */}
         <Switch>
           <Route exact path='/'>
             <Home></Home>
@@ -45,7 +45,7 @@ function App() {
             <Login></Login>
           </Route>
           <Route path='/*'>
-            <h1>no match</h1>
+            <NotMatch></NotMatch>
           </Route>
         </Switch>
       </Router>
