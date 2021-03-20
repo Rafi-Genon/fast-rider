@@ -10,7 +10,7 @@ const Login = () => {
     }
     const history = useHistory()
     const location = useLocation()
-    let { from } = location.state || { from: { pathname: "/book" } };
+    let { from } = location.state || { from: { pathname: "/" } };
 
     const [loggedUser, setloggedUser] = useContext(fullContext)
     var googleProvider = new firebase.auth.GoogleAuthProvider();

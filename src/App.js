@@ -33,7 +33,7 @@ function App() {
           <Route path='/home'>
             <Home></Home>
           </Route>
-          <PrivateRoute path='/book'>
+          <PrivateRoute path='/book/:vehicleType'>
             <BookRide></BookRide>
           </PrivateRoute>
           <Route path='/create-account'>

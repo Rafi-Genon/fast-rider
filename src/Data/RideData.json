@@ -1,0 +1,100 @@
+{
+    "vehicleCard": [
+        {
+            "image": "https://i.ibb.co/kgzTpp4/Bus.png",
+            "type": "bus"
+        },
+        {
+            "image": "https://i.ibb.co/HhDp1K7/Car.png",
+            "type": "car"
+        },
+        {
+            "image": "https://i.ibb.co/S5hwpTG/Metro.png",
+            "type": "metro"
+        },
+        {
+            "image": "https://i.ibb.co/vw1xC38/Motorcycle.png",
+            "type": "motorCycle"
+        }
+    ],
+    "bus": [
+        {
+            "image": "https://i.ibb.co/kgzTpp4/Bus.png",
+            "type": "bus",
+            "seat": 9,
+            "rent": "$ 25"
+        },
+        {
+            "image": "https://i.ibb.co/kgzTpp4/Bus.png",
+            "type": "bus",
+            "seat": 8,
+            "rent": "$ 13"
+        },
+        {
+            "image": "https://i.ibb.co/kgzTpp4/Bus.png",
+            "type": "bus",
+            "seat": 14,
+            "rent": "$ 22"
+        }
+    ],
+    "car": [
+        {
+            "image": "https://i.ibb.co/HhDp1K7/Car.png",
+            "type": "car",
+            "seat": 4,
+            "rent": "$ 65"
+        },
+        {
+            "image": "https://i.ibb.co/HhDp1K7/Car.png",
+            "type": "car",
+            "seat": 4,
+            "rent": "$ 65"
+        },
+        {
+            "image": "https://i.ibb.co/HhDp1K7/Car.png",
+            "type": "car",
+            "seat": 4,
+            "rent": "$ 65"
+        }
+    ],
+    "metro": [
+        {
+            "image": "https://i.ibb.co/S5hwpTG/Metro.png",
+            "type": "metro",
+            "seat": 24,
+            "rent": "$ 5"
+        },
+        {
+            "image": "https://i.ibb.co/S5hwpTG/Metro.png",
+            "type": "metro",
+            "seat": 15,
+            "rent": "$ 10"
+        },
+        {
+            "image": "https://i.ibb.co/S5hwpTG/Metro.png",
+            "type": "metro",
+            "seat": 23,
+            "rent": "$ 35"
+        }
+    ],
+    "motorCycle": [
+        {
+            "image": "https://i.ibb.co/vw1xC38/Motorcycle.png",
+            "type": "motorCycle",
+            "seat": 5,
+            "rent": "$ 24"
+        },
+        {
+            "image": "https://i.ibb.co/vw1xC38/Motorcycle.png",
+            "type": "motorCycle",
+            "seat": 12,
+            "rent": "$ 99"
+        },
+        {
+            "image": "https://i.ibb.co/vw1xC38/Motorcycle.png",
+            "type": "motorCycle",
+            "seat": 6,
+            "rent": "$ 27"
+        }
+    ]
+}
